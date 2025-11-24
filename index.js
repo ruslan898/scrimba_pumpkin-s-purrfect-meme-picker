@@ -4,16 +4,21 @@ const emotionRadios = document.getElementById('emotion-radios');
 const getImageBtn = document.getElementById('get-image-btn');
 const gifsOnlyOption = document.getElementById('gifs-only-option');
 const memeModalInner = document.getElementById('meme-modal-inner');
-const memeModal = document.getElementById('meme-modal');
+// const memeModal = document.getElementById('meme-modal');
 const memeModalCloseBtn = document.getElementById('meme-modal-close-btn');
 const overlayModal = document.getElementById('overlay-modal');
 
 emotionRadios.addEventListener('change', highlightCheckedOption);
 
-// memeModalCloseBtn.addEventListener('click', closeModal);
 overlayModal.addEventListener('click', (e) => closeModal(e));
 
-getImageBtn.addEventListener('click', renderCat);
+getImageBtn.addEventListener('click', renderCats);
+
+memeModalInner.addEventListener('click', (e) => {
+  if (e.target.classList.contains('cat-img')) [
+    renderActiveCat(e)
+  ]
+})
 
 function highlightCheckedOption(e) {
   const radios = document.getElementsByClassName('radio');
@@ -29,28 +34,41 @@ function closeModal(e) {
   }
 }
 
-function renderCat() {
-  const catObject = getSingleCatObject();
-  memeModalInner.innerHTML = `
+function renderCats() {
+  const catObjects = getMatchingCatsArray();
+  const catObjectsHTMLString = catObjects.map(catObject => {
+    return `
         <img
         class="cat-img"
         src="./images/${catObject.image}"
         alt="${catObject.alt}"
         >
         `;
+  }).join('')
+
+  memeModalInner.innerHTML = catObjectsHTMLString;
   overlayModal.style.display = 'block';
 }
 
-function getSingleCatObject() {
-  const catsArray = getMatchingCatsArray();
-
-  if (catsArray.length === 1) {
-    return catsArray[0];
-  } else {
-    const randomNumber = Math.floor(Math.random() * catsArray.length);
-    return catsArray[randomNumber];
-  }
+function renderActiveCat(e) {
+  const images = memeModalInner.querySelectorAll('.cat-img')
+  images.forEach(img => {
+    if (e.target === img) return
+    img.classList.remove('cat-img-active')
+  })
+  e.target.classList.toggle('cat-img-active')
 }
+
+// function getSingleCatObject() {
+//   const catsArray = getMatchingCatsArray();
+
+//   if (catsArray.length === 1) {
+//     return catsArray[0];
+//   } else {
+//     const randomNumber = Math.floor(Math.random() * catsArray.length);
+//     return catsArray[randomNumber];
+//   }
+// }
 
 function getMatchingCatsArray() {
   if (document.querySelector('input[type="radio"]:checked')) {
