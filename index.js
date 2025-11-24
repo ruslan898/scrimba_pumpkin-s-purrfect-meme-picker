@@ -6,10 +6,12 @@ const gifsOnlyOption = document.getElementById('gifs-only-option');
 const memeModalInner = document.getElementById('meme-modal-inner');
 const memeModal = document.getElementById('meme-modal');
 const memeModalCloseBtn = document.getElementById('meme-modal-close-btn');
+const overlayModal = document.getElementById('overlay-modal');
 
 emotionRadios.addEventListener('change', highlightCheckedOption);
 
-memeModalCloseBtn.addEventListener('click', closeModal);
+// memeModalCloseBtn.addEventListener('click', closeModal);
+overlayModal.addEventListener('click', (e) => closeModal(e));
 
 getImageBtn.addEventListener('click', renderCat);
 
@@ -21,8 +23,10 @@ function highlightCheckedOption(e) {
   document.getElementById(e.target.id).parentElement.classList.add('highlight');
 }
 
-function closeModal() {
-    memeModal.style.display = 'none';
+function closeModal(e) {
+  if (e.target === memeModalCloseBtn || e.target === overlayModal) {
+    overlayModal.style.display = 'none';
+  }
 }
 
 function renderCat() {
@@ -34,7 +38,7 @@ function renderCat() {
         alt="${catObject.alt}"
         >
         `;
-  memeModal.style.display = 'flex';
+  overlayModal.style.display = 'block';
 }
 
 function getSingleCatObject() {
